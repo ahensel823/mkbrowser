@@ -15,20 +15,17 @@ body {
     position: relative;
 }
 .character {
+  width: fit-content;
+    position: absolute;
+    top: 42%;
+}
+.cruceta {
   position: fixed;
   top: 35%;
   width: 35px;
   height: 125px;
   border-radius: 50%;
   left: 24%;
-}
-.cruceta {
-  position: absolute;
-  top: 45%;
-  width: 35px;
-  height: 125px;
-  border-radius: 50%;
-  left: 4%;
 }   
 .cuadrantes {
     display: flex;
