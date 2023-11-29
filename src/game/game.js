@@ -12,6 +12,9 @@ export class game {
     this.canvas.scrollLeft = initialScrollLeft
     const initialCharacterPosition = containerWidth / 2 * 1.2
     this.targetX = initialCharacterPosition
+    document.addEventListener('contextmenu', function (e) {
+      e.preventDefault()
+    })
       this.targetY = 
       this.sprite = 0
       this.transitionSpeed = 2
