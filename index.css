@@ -15,10 +15,12 @@ body {
     position: relative;
 }
 .character {
-    width: fit-content;
-    position: absolute;
-    top: 42%;
-    z-index: 25;
+  position: fixed;
+  top: 35%;
+  width: 35px;
+  height: 125px;
+  border-radius: 50%;
+  left: 24%;
 }
 .cruceta {
   position: absolute;
