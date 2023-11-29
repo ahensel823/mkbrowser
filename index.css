@@ -45,12 +45,10 @@ body {
     .cuadrante-half-1 {
       height: 50%;
       width: 2px;
-      background: red;
     }
     .cuadrante-half-2 {
         height: 50%;
         width: 2px;
-        background: green;
     }
 }  
 .active {
