@@ -21,11 +21,10 @@ body {
 }
 .cruceta {
   position: fixed;
-  top: 35%;
+  top: 150px;
   width: 35px;
   height: 125px;
   border-radius: 50%;
-  left: 24%;
 }   
 .cuadrantes {
     display: flex;
