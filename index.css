@@ -34,10 +34,11 @@ body {
 .cruceta {
   position: fixed;
   display: flex;
-  top: 35%;
+  top: 320px;
   width: 35px;
   height: 125px;
   border-radius: 50%;
+  left: 20px;
 }   
 .img-cruz {
   opacity: 70%;
