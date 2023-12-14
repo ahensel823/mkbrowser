@@ -1,4 +1,16 @@
-
+@font-face {
+  font-family: 'mkda'; /* Nombre que usarás para referenciar la fuente */
+  src: url('../assets/fonts/mkda.ttf') format('truetype'); /* Ruta a tu archivo de fuente */
+  /* Puedes agregar más formatos si tu fuente tiene diferentes extensiones (woff2, ttf, etc.) */
+}
+p {
+  font-family: "mkda";
+  position: fixed;
+  top: 0;
+  left: 40%;
+  color: white;
+  width: 150px;
+}
 body {
     margin: 0;
     overflow: hidden;
@@ -15,21 +27,31 @@ body {
     position: relative;
 }
 .character {
-  width: fit-content;
+    width: fit-content;
     position: absolute;
     top: 42%;
 }
 .cruceta {
   position: fixed;
-  top: 150px;
+  display: flex;
+  top: 35%;
   width: 35px;
   height: 125px;
   border-radius: 50%;
 }   
+.img-cruz {
+  opacity: 70%;
+  width: 130px;
+  z-index: 20;
+}
 .cuadrantes {
     display: flex;
     height: 100%;
     justify-content: center;
+    width: 200px;
+    position: absolute;
+    left: -39px;
+    z-index: 300;
     .cuadrante-1 {
       transform: rotate(45deg)
     }
@@ -47,8 +69,8 @@ body {
       width: 2px;
     }
     .cuadrante-half-2 {
-        height: 50%;
-        width: 2px;
+      height: 50%;
+      width: 2px;
     }
 }  
 .active {
@@ -87,5 +109,9 @@ body {
   height: 100px;
   width: 1200px;
 }
-
+@media only screen and (min-width: 600px) {
+  .cruceta {
+      display: none; /* Oculta la cruceta en dispositivos con un ancho de pantalla mayor o igual a 600px */
+  }
+}
 
