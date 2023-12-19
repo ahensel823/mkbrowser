@@ -1,13 +1,12 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-undef */
-export class game {
+
+export class Game {
   constructor () {
-    this.canvas = document.getElementsByClassName('canvas')[0]
+    this.canvas = document.querySelector('.canvas')
     this.containers = document.querySelectorAll('.container')
-    this.character = document.getElementsByClassName('character')[0]
-    this.cruceta = document.getElementsByClassName('cruceta')[0]
-    this.right = document.getElementById('right')
-    this.left = document.getElementById('left')
+    this.character = document.querySelector('.character')
+    this.cruceta = document.querySelector('.cruceta')
     this.imgElements = Array.from(this.containers).flatMap(container => Array.from(container.children))
     const containerWidth = this.canvas.clientWidth
     const contentWidth = this.canvas.scrollWidth
@@ -16,177 +15,125 @@ export class game {
     const initialCharacterPosition = containerWidth / 2 * 1.2
     this.targetX = initialCharacterPosition
     this.targetY = 0
-    this.sprite = 0
+    this.transitionSpeed = 2
+    this.isTrue = false
+    this.sprites = [
+      { nombre: 'iddle', index: [0, 13] },
+      { nombre: 'd', index: [14, 31] },
+      { nombre: 'a', index: [31, 14] },
+      { nombre: 'jBallF', index: [32, 47] },
+      { nombre: 'jBallB', index: [47, 32] },
+      { nombre: 'background', index: [0, 5] }
+    ]
     this.A = 0
     this.B = 13
-    this.transitionSpeed = 2
-    document.addEventListener('contextmenu', function (e) { e.preventDefault() })
-    this.sprites = [
-      {
-        nombre: 'iddle',
-        index: [0, 13],
-        time: 4,
-        on: false
-      },
-      {
-        nombre: 'd',
-        index: [14, 31],
-        time: 4,
-        on: false
-      },
-      {
-        nombre: 'a',
-        index: [31, 14],
-        time: 4,
-        on: false
-      },
-      {
-        nombre: 'jBallF',
-        index: [32, 47],
-        time: 2,
-        on: false
-      },
-      {
-        nombre: 'jBallB',
-        index: [47, 32],
-        time: 2,
-        on: false
-      },
-      {
-        nombre: 'background',
-        index: [0, 5],
-        on: false
-      }
-    ]
+    this.key = 'iddle'
     this.time = 0
     this.frame = 0
     this.setupEventListeners()
-    this.bucleDeJuego()
+    this.gameLoop()
   }
 
-  bucleDeJuego () {
-    requestAnimationFrame(this.bucleDeJuego.bind(this))
+  gameLoop () {
+    requestAnimationFrame(this.gameLoop.bind(this))
     this.getRender()
   }
 
   setupEventListeners () {
-    this.right.addEventListener('touchstart', () => {
-      const spriteIddle = this.sprites.find(sprite => sprite.nombre === 'iddle')
-      this.sprite = this.sprites.find(sprite => sprite.nombre === 'd')
-      if (spriteIddle && this.sprite) {
-        this.A = this.sprite.index[0]
-        this.B = this.sprite.index[1]
-      }
-    })
-    this.left.addEventListener('touchstart', () => {
-      const spriteIddle = this.sprites.find(sprite => sprite.nombre === 'iddle')
-      this.sprite = this.sprites.find(sprite => sprite.nombre === 'a')
-      if (spriteIddle && this.sprite) {
-        this.A = this.sprite.index[0]
-        this.B = this.sprite.index[1]
-      }
-    })
-    this.right.addEventListener('touchend', () => {
-      this.sprite = this.sprites[0]
+    document.getElementById('right').addEventListener('touchstart', () => this.handleTouchStart('d'))
+    document.getElementById('left').addEventListener('touchstart', () => this.handleTouchStart('a'))
+    document.getElementById('right').addEventListener('touchend', () => this.handleTouchEnd())
+    document.getElementById('left').addEventListener('touchend', () => this.handleTouchEnd())
+    document.addEventListener('keydown', (event) => this.handleKeyDown(event))
+    document.addEventListener('keyup', () => this.handleKeyUp())
+  }
+
+  handleTouchStart (direction) {
+    this.sprite = this.sprites.find(sprite => sprite.nombre === direction)
+    this.A = this.sprite.index[0]
+    this.B = this.sprite.index[1]
+  }
+
+  handleTouchEnd () {
+    this.sprite = this.sprites[0]
+    this.A = this.sprite.index[0]
+    this.B = this.sprite.index[1]
+  }
+
+  handleKeyDown (event) {
+    if (!this.isTrue) {
+      this.isTrue = true
+      this.sprite = this.sprites.find(sprite => sprite.nombre === event.key)
+      this.key = event.key
       this.A = this.sprite.index[0]
       this.B = this.sprite.index[1]
-    })
-    this.left.addEventListener('touchend', () => {
-      this.sprite = this.sprites[0]
-      this.A = this.sprite.index[0]
-      this.B = this.sprite.index[1]
-    })
-    document.addEventListener('keydown', (event) => {
-      const key = event.key
-      const spriteIddle = this.sprites.find(sprite => sprite.nombre === 'iddle')
-      this.sprite = this.sprites.find(sprite => sprite.nombre === key && sprite.nombre !== 'iddle')
-      if (spriteIddle && this.sprite) {
-        this.A = this.sprite.index[0]
-        this.B = this.sprite.index[1]
-      }
-    })
-    document.addEventListener('keyup', () => {
-      this.sprite = this.sprites[0]
-      this.A = this.sprite.index[0]
-      this.B = this.sprite.index[1]
-    })
+    }
+  }
+
+  handleKeyUp () {
+    this.isTrue = false
+    this.key = 'iddle'
+    this.sprite = this.sprites[0]
+    this.A = this.sprite.index[0]
+    this.B = this.sprite.index[1]
   }
 
   getRender () {
     this.time++
     if (this.time === 4) {
-      if (this.A < this.B) {
-        this.frame++
-      } else {
-        this.frame--
-      }
-      if (this.sprites.indexOf(this.sprite) === 1) {
-        if (this.targetX < 1050) {
-          this.targetX += 10
-          const characterRightEdge = this.character.getBoundingClientRect().right
-          const containerWidth = this.canvas.clientWidth
-          if (characterRightEdge > containerWidth) {
-            this.canvas.scrollBy({
-              left: 20,
-              behavior: 'smooth'
-            })
-          }
-        }
-      }
-      if (this.sprites.indexOf(this.sprite) === 2) {
-        if (this.targetX > 50) {
-          this.targetX -= 10
-          const characterLeftEdge = this.character.getBoundingClientRect().left
-          const containerWidth = this.canvas.clientWidth
-          if (characterLeftEdge <= containerWidth) {
-            this.canvas.scrollBy({
-              left: -20,
-              behavior: 'smooth'
-            })
-          }
-        }
-      }
-      this.character.style.transform = `translateX(${this.targetX}px)`
-      this.character.style.transition = `transform ${this.transitionSpeed / 20}s ease-in-out`
+      this.A += (this.A < this.B) ? 1 : -1
+      this.updateActiveImages()
+      this.handleSpriteMovement()
+      this.handleCanvasScroll()
       this.time = 0
     }
-    if (this.A < this.B) {
-      for (let i = 0; i < this.imgElements.length; i++) {
-        if (i < this.A || i > this.B) {
-          this.imgElements[i].classList.remove('active')
-        }
-      }
-      for (let i = this.A; i <= this.B; i++) {
-        const isEven = i % 2 === 0
-        const nextIndex = isEven ? i + 1 : i - 1
-        if (this.frame >= this.B) {
-          this.frame = this.A
-        }
-        if (i === this.frame || nextIndex === this.frame) {
-          this.imgElements[i].classList.add('active')
-        } else {
-          this.imgElements[i].classList.remove('active')
-        }
-      }
+  }
+
+  updateActiveImages () {
+    if (this.A === this.B) {
+      this.A = this.sprites.find(sprite => sprite.nombre === this.key).index[0]
     }
-    if (this.B < this.A) {
-      if (this.frame <= this.B) {
-        this.frame = this.A
-      }
-      for (let i = 0; i < this.imgElements.length; i++) {
-        if (i < this.B || i > this.A) {
-          this.imgElements[i].classList.remove('active')
-        }
-      }
-      for (let i = this.A; i >= this.B; i--) {
-        const isEven = i % 2 === 0
-        const nextIndex = isEven ? i + 1 : i - 1
-        if (i === this.frame || nextIndex === this.frame) {
-          this.imgElements[i].classList.add('active')
-        } else {
-          this.imgElements[i].classList.remove('active')
-        }
-      }
+    const isEven = this.A % 2 === 0
+    const nextIndex = isEven ? this.A + 1 : this.A - 1
+    for (let i = 0; i < this.imgElements.length; i++) {
+      const isActive = i === this.A || i === nextIndex
+      this.imgElements[i].classList.toggle('active', isActive)
     }
+  }
+
+  handleSpriteMovement () {
+    const spriteIndex = this.sprites.indexOf(this.sprite)
+    if (spriteIndex === 1 && this.isCharacterNearRightEdge()) {
+      this.targetX += 7
+    } else if (spriteIndex === 2 && this.isCharacterNearLeftEdge()) {
+      this.targetX -= 7
+    }
+    this.character.style.transform = `translateX(${this.targetX}px)`
+    this.character.style.transition = `transform ${this.transitionSpeed / 20}s ease-in-out`
+  }
+
+  handleCanvasScroll () {
+    const characterEdge = (this.A < this.B) ? this.character.getBoundingClientRect().right : this.character.getBoundingClientRect().left
+    const scrollDirection = (this.A < this.B) ? 50 : -50
+    const containerWidth = this.canvas.clientWidth
+
+    if (this.shouldScroll(characterEdge, containerWidth)) {
+      this.canvas.scrollBy({
+        left: scrollDirection,
+        behavior: 'smooth'
+      })
+    }
+  }
+
+  isCharacterNearRightEdge () {
+    return this.targetX < 1050 && (this.character.getBoundingClientRect().right) < this.canvas.clientWidth
+  }
+
+  isCharacterNearLeftEdge () {
+    return this.targetX > 50 && (this.character.getBoundingClientRect().left) > 0
+  }
+
+  shouldScroll (characterEdge, containerWidth) {
+    return characterEdge > containerWidth || characterEdge < 0
   }
 }
