@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'mkda'; /* Nombre que usarás para referenciar la fuente */
-  src: url('../assets/fonts/mkda.ttf') format('truetype'); /* Ruta a tu archivo de fuente */
+  src: url('/assets/fonts/mkda.ttf') format('truetype'); /* Ruta a tu archivo de fuente */
   /* Puedes agregar más formatos si tu fuente tiene diferentes extensiones (woff2, ttf, etc.) */
 }
 p {
